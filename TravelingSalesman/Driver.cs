@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace ConsoleApplication1
 {
-    class Main
+    class Driver
     {
 
         [STAThread]
@@ -24,7 +24,7 @@ namespace ConsoleApplication1
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Main program = new Main();
+            Driver program = new Driver();
 
 
             /*int[][] map =new int[10][] {
@@ -317,7 +317,7 @@ namespace ConsoleApplication1
                         queue.Enqueue(nodelist[i]);
                    
                         node previousnode = nodelist[nodelist[i].PreviousNodeid];
-                        float edgeweight = ConsoleApplication1.Main.distance(frontiernode, nodelist[i]);
+                        float edgeweight = ConsoleApplication1.Driver.distance(frontiernode, nodelist[i]);
                         float newdistance = frontiernode.ShortestDistanceTo + edgeweight;
 
                         if (nodelist[i].ShortestDistanceTo == 0)
@@ -366,7 +366,7 @@ namespace ConsoleApplication1
                     stack.Push(nodelist[i]);
 
                     node previousnode = nodelist[nodelist[i].PreviousNodeid];
-                    float edgeweight = ConsoleApplication1.Main.distance(frontiernode, nodelist[i]);
+                    float edgeweight = ConsoleApplication1.Driver.distance(frontiernode, nodelist[i]);
                     float newdistance = frontiernode.ShortestDistanceTo + edgeweight;
                     
 

@@ -18,7 +18,7 @@ namespace ConsoleApplication1
 
             FromNode = Node1;
             ToNode = Node2;
-            distance = Main.distance(Node1.x, Node1.y, Node2.x, Node2.y);
+            distance = Driver.distance(Node1.x, Node1.y, Node2.x, Node2.y);
             xdif = Node2.x - Node1.x;
             ydif = Node2.y - Node1.y;
         } 
