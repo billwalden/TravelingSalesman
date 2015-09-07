@@ -58,7 +58,7 @@ namespace ConsoleApplication1
         }
         public static float distance(node fromNode, node toNode)
         {
-            return distance(fromNode.getx(), fromNode.gety(), toNode.getx(), toNode.gety());
+            return distance(fromNode.x, fromNode.y, toNode.x, toNode.y);
         }
 
 
@@ -118,7 +118,7 @@ namespace ConsoleApplication1
             {
                 for (int x = 1; x < nodes.Count() - i; x++)
                 {
-                    distances[i, x-1] = distance(nodes[i].getx(), nodes[i].gety(), nodes[i + x].getx(), nodes[i + x].gety());
+                    distances[i, x-1] = distance(nodes[i].x, nodes[i].y, nodes[i + x].x, nodes[i + x].y);
                 }
             }
             
@@ -266,14 +266,14 @@ namespace ConsoleApplication1
             route fastestroute;
             route currentroute;
 
-            fastestpath[0] = startnode.getid();
-            currentpath[0] = startnode.getid();
+            fastestpath[0] = startnode.id;
+            currentpath[0] = startnode.id;
             int count = 0;
             for (int i = 0; i < nodes.Count(); i++)
             {
-                if(nodes[i].getid() != startnode.getid())
+                if(nodes[i].id != startnode.id)
                 {
-                    nodeIDlist[count] = nodes[i].getid();
+                    nodeIDlist[count] = nodes[i].id;
                     count++;
                 }
             }
@@ -295,7 +295,7 @@ namespace ConsoleApplication1
             }
             fastestroute.printPath();
             Console.WriteLine("\nFast Distance:  " + fastestroute.netdistance);
-            Console.WriteLine("Traveling from and back to Node# " + startnode.getid());
+            Console.WriteLine("Traveling from and back to Node# " + startnode.id);
         }
 
         public void BFS(List <DirectedNode> nodelist)
@@ -308,7 +308,7 @@ namespace ConsoleApplication1
             while (queue.Count() != 0)
             {
                 frontiernode = queue.Dequeue();
-                adjlist = frontiernode.getAdjNodes();
+                adjlist = frontiernode.adjnodes;
                 if(adjlist == null) { break; }
                
                     foreach (int i in adjlist)
@@ -316,33 +316,33 @@ namespace ConsoleApplication1
                         
                         queue.Enqueue(nodelist[i]);
                    
-                        node previousnode = nodelist[nodelist[i].getPrevNodeId()];
+                        node previousnode = nodelist[nodelist[i].PreviousNodeid];
                         float edgeweight = Program.distance(frontiernode, nodelist[i]);
-                        float newdistance = frontiernode.getShortestDistanceTo() + edgeweight;
+                        float newdistance = frontiernode.ShortestDistanceTo + edgeweight;
 
-                        if (nodelist[i].getShortestDistanceTo() == 0)
+                        if (nodelist[i].ShortestDistanceTo == 0)
                         {
-                            nodelist[i].setShortestDistanceTo(newdistance);
-                            nodelist[i].setPrevNodeId(frontiernode.getid());
+                            nodelist[i].ShortestDistanceTo = newdistance;
+                        nodelist[i].PreviousNodeid = frontiernode.id;
                         }
-                        else if (newdistance < nodelist[i].getShortestDistanceTo())
+                        else if (newdistance < nodelist[i].ShortestDistanceTo)
                         {
-                            nodelist[i].setShortestDistanceTo(newdistance);
-                            nodelist[i].setPrevNodeId(frontiernode.getid());
+                            nodelist[i].ShortestDistanceTo = newdistance;
+                        nodelist[i].PreviousNodeid = frontiernode.id;
                         }
                         else { }
 
                     }
                
             }
-            int prevNodeId = nodelist[nodelist.Count() - 1].getPrevNodeId();
+            int prevNodeId = nodelist[nodelist.Count() - 1].PreviousNodeid;
             Console.Write("Path: " + prevNodeId);
             while(prevNodeId != 0)
             {
-                Console.Write(" <- " + nodelist[prevNodeId].getPrevNodeId());
-                prevNodeId = nodelist[prevNodeId].getPrevNodeId();
+                Console.Write(" <- " + nodelist[prevNodeId].PreviousNodeid);
+                prevNodeId = nodelist[prevNodeId].PreviousNodeid;
             }
-            Console.Write("\nDistance: " + nodelist[10].getShortestDistanceTo());
+            Console.Write("\nDistance: " + nodelist[10].ShortestDistanceTo);
             
 
         }
@@ -356,7 +356,7 @@ namespace ConsoleApplication1
             while(stack.Count() != 0)
             {
                 frontiernode = stack.Pop();
-                adjlist = frontiernode.getAdjNodes();
+                adjlist = frontiernode.adjnodes;
 
                 if (adjlist == null) { continue; }
 
@@ -365,34 +365,34 @@ namespace ConsoleApplication1
 
                     stack.Push(nodelist[i]);
 
-                    node previousnode = nodelist[nodelist[i].getPrevNodeId()];
+                    node previousnode = nodelist[nodelist[i].PreviousNodeid];
                     float edgeweight = Program.distance(frontiernode, nodelist[i]);
-                    float newdistance = frontiernode.getShortestDistanceTo() + edgeweight;
+                    float newdistance = frontiernode.ShortestDistanceTo + edgeweight;
                     
 
-                    if (nodelist[i].getShortestDistanceTo() == 0)
+                    if (nodelist[i].ShortestDistanceTo == 0)
                     {
-                        nodelist[i].setShortestDistanceTo(newdistance);
-                        nodelist[i].setPrevNodeId(frontiernode.getid());
+                        nodelist[i].ShortestDistanceTo = newdistance;
+                        nodelist[i].PreviousNodeid = frontiernode.id;
                     }
-                    else if (newdistance < nodelist[i].getShortestDistanceTo())
+                    else if (newdistance < nodelist[i].ShortestDistanceTo)
                     {
-                        nodelist[i].setShortestDistanceTo(newdistance);
-                        nodelist[i].setPrevNodeId(frontiernode.getid());
+                        nodelist[i].ShortestDistanceTo = newdistance;
+                        nodelist[i].PreviousNodeid = frontiernode.id;
                     }
                     else { }
 
                 }
 
             }
-            int prevNodeId = nodelist[nodelist.Count() - 1].getPrevNodeId();
+            int prevNodeId = nodelist[nodelist.Count() - 1].PreviousNodeid;
             Console.Write("Path: " + prevNodeId);
             while (prevNodeId != 0)
             {
-                Console.Write(" <- " + nodelist[prevNodeId].getPrevNodeId());
-                prevNodeId = nodelist[prevNodeId].getPrevNodeId();
+                Console.Write(" <- " + nodelist[prevNodeId].PreviousNodeid);
+                prevNodeId = nodelist[prevNodeId].PreviousNodeid;
             }
-            Console.Write("\nDistance: " + nodelist[10].getShortestDistanceTo());
+            Console.Write("\nDistance: " + nodelist[10].ShortestDistanceTo);
         }
     
 
@@ -420,7 +420,7 @@ namespace ConsoleApplication1
             {
                 if (edgelist[i].FromNode == startnode)
                 {
-                    if (edgelist[i].getdist() > greatestEdge.getdist())
+                    if (edgelist[i].distance > greatestEdge.distance)
                         greatestEdge = edgelist[i];
                 }
             }
@@ -447,8 +447,8 @@ namespace ConsoleApplication1
             foreach (node item in nodelist)
             {
                 NodetoEdgeStart = edgelist.Find(i => ((i.ToNode == item) && (i.FromNode == startnode)));
-                float CrossProduct = Math.Abs((greatestEdge.getXdif() * NodetoEdgeStart.getYdif()) - (greatestEdge.getYdif() * NodetoEdgeStart.getXdif()));
-                item.ClosestEdgeDist = CrossProduct / greatestEdge.getdist();
+                float CrossProduct = Math.Abs((greatestEdge.xdif * NodetoEdgeStart.ydif) - (greatestEdge.ydif * NodetoEdgeStart.xdif));
+                item.ClosestEdgeDist = CrossProduct / greatestEdge.distance;
                 item.ClosestEdge = greatestEdge;
             }
             node closestnode = nodelist[0];
@@ -484,15 +484,15 @@ namespace ConsoleApplication1
                     {
                         NodetoEdgeStart = edgelist.Find(i => ((i.ToNode == item) && (i.FromNode == edge.FromNode)));
                         NodetoEdgeEnd = edgelist.Find(i => ((i.ToNode == edge.ToNode) && (i.FromNode == item)));
-                        float CrossProduct = Math.Abs((edge.getXdif() * NodetoEdgeStart.getYdif()) - (edge.getYdif() * NodetoEdgeStart.getXdif()));
-                        float D = CrossProduct / edge.getdist();
-                        float Dotproduct = edge.getXdif() * NodetoEdgeStart.getXdif() + edge.getYdif() * NodetoEdgeStart.getYdif();
-                        float t = Dotproduct / (edge.getdist() * edge.getdist());
-                        float D1 = NodetoEdgeStart.getdist() + NodetoEdgeEnd.getdist();
+                        float CrossProduct = Math.Abs((edge.xdif * NodetoEdgeStart.ydif) - (edge.ydif * NodetoEdgeStart.xdif));
+                        float D = CrossProduct / edge.distance;
+                        float Dotproduct = edge.xdif * NodetoEdgeStart.xdif + edge.ydif * NodetoEdgeStart.ydif;
+                        float t = Dotproduct / (edge.distance * edge.distance);
+                        float D1 = NodetoEdgeStart.distance + NodetoEdgeEnd.distance;
                         edge2 = route.Find(i => (i.ToNode == edge.FromNode));
                         NodetoEdge2Start = edgelist.Find(i => ((i.ToNode == item) && (i.FromNode == edge2.FromNode)));
                         NodetoEdge2End = edgelist.Find(i => ((i.ToNode == edge2.ToNode) && (i.FromNode == item)));
-                        float D2 = NodetoEdge2Start.getdist() + NodetoEdge2End.getdist();
+                        float D2 = NodetoEdge2Start.distance + NodetoEdge2End.distance;
 
                         if ((t > 0) && (t < 1))
                         {
@@ -511,9 +511,9 @@ namespace ConsoleApplication1
                        
            
               
-                        else if (NodetoEdgeStart.getdist() < item.ClosestEdgeDist)
+                        else if (NodetoEdgeStart.distance < item.ClosestEdgeDist)
                         {
-                            item.ClosestEdgeDist = NodetoEdgeStart.getdist();
+                            item.ClosestEdgeDist = NodetoEdgeStart.distance;
                             if (D1 < D2)
                             {
                                 item.ClosestEdge = edge;
@@ -551,8 +551,8 @@ namespace ConsoleApplication1
             float distancef = 0;
             foreach (Edge e in route)
             {
-                distancef += e.getdist();
-                Console.WriteLine(e.getdist());
+                distancef += e.distance;
+                Console.WriteLine(e.distance);
             }
             Console.Write("\n" + distancef);
 

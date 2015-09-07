@@ -10,7 +10,7 @@ namespace ConsoleApplication1
     { 
         private float[,] distanceList;
         public int[] path { get; }
-        public float netdistance { get; };
+        public float netdistance { get; set; }
 
         public route(float[,] distances, int[] iarray)
         {

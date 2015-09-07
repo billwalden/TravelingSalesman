@@ -8,9 +8,9 @@ namespace ConsoleApplication1
 {
     public class Edge
     {
-        private float xdif;
-        private float ydif;
-        private float distance;
+        public float xdif { get; set; }
+        public float ydif { get; set;}
+        public float distance { get; set; }
         public node FromNode { get; }
         public node ToNode { get; }
         public Edge(node Node1, node Node2)
@@ -18,15 +18,9 @@ namespace ConsoleApplication1
 
             FromNode = Node1;
             ToNode = Node2;
-            distance = Program.distance(Node1.getx(), Node1.gety(), Node2.getx(), Node2.gety());
-            xdif = Node2.getx() - Node1.getx();
-            ydif = Node2.gety() - Node1.gety();
-        }
-        public float getXdif() { return xdif; }
-        public float getYdif() { return ydif; }
-        public float getdist() { return distance; }
-        
-
-        
+            distance = Program.distance(Node1.x, Node1.y, Node2.x, Node2.y);
+            xdif = Node2.x - Node1.x;
+            ydif = Node2.y - Node1.y;
+        } 
     }
 }

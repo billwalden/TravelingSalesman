@@ -56,20 +56,20 @@ namespace ConsoleApplication1
             Graphics g = e.Graphics;
             foreach (node item in nodelist)
             {
-                g.FillEllipse(blackbrush, item.getx() * 5, item.gety() * 5, 8, 8);
+                g.FillEllipse(blackbrush, item.x * 5, item.y * 5, 8, 8);
 
             }
             foreach (Edge edge in edgelist)
             {
-                g.DrawLine(blackpen, edge.FromNode.getx() * 5, edge.FromNode.gety() * 5, edge.ToNode.getx() * 5, edge.ToNode.gety() * 5);
+                g.DrawLine(blackpen, edge.FromNode.x * 5, edge.FromNode.y * 5, edge.ToNode.x * 5, edge.ToNode.y * 5);
             }
             foreach (node item in marked)
             {
-                g.FillEllipse(redbrush, item.getx() * 5, item.gety() * 5, 8, 8);
+                g.FillEllipse(redbrush, item.x * 5, item.y * 5, 8, 8);
               
             }
             
-            g.FillEllipse(greenbrush, marked.Last().getx() * 5, marked.Last().gety() * 5, 8, 8);
+            g.FillEllipse(greenbrush, marked.Last().x * 5, marked.Last().y * 5, 8, 8);
 
             if(edgelist.Count() == nodelist.Count())
             {
@@ -77,7 +77,7 @@ namespace ConsoleApplication1
                 float distance = 0;
                 foreach(Edge item in edgelist)
                 {
-                    distance += item.getdist();
+                    distance += item.distance;
                 }
                 textBox2.Text = distance.ToString();
             }
@@ -91,7 +91,7 @@ namespace ConsoleApplication1
             textBox1.Text = "";
             foreach (Edge item in edgelist)
             {
-                textBox1.Text += item.FromNode.getid();
+                textBox1.Text += item.FromNode.id;
             }
             mainthread.Resume();
         }

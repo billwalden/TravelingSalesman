@@ -27,14 +27,14 @@ namespace ConsoleApplication1
         {
             foreach(route item in routeList)
             {
-                float d = item.getNetDist();
+                float d = item.netdistance;
                 Console.Write("\n" + d);
             }
         }
         public void printFastestDistance(int startnodeID)
         {
             route fastest = routeList.Find(i => (i.path[0] == startnodeID));
-            Console.WriteLine("\nFastest Distance:  " + fastest.getNetDist());
+            Console.WriteLine("\nFastest Distance:  " + fastest.netdistance);
             Console.WriteLine("Starting from and traveling back to node# " + startnodeID);
         }
         
