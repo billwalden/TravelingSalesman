@@ -544,19 +544,9 @@ namespace ConsoleApplication1
                 route.Remove(closestnode.ClosestEdge);
                 mainthread.Suspend();
 
-                Console.WriteLine(route.Count());
-                
-
+              
             }
-            float distancef = 0;
-            foreach (Edge e in route)
-            {
-                distancef += e.distance;
-                Console.WriteLine(e.distance);
-            }
-            Console.Write("\n" + distancef);
-
-
+        
 
         }
         

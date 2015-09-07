@@ -79,7 +79,7 @@ namespace ConsoleApplication1
                 {
                     distance += item.distance;
                 }
-                textBox2.Text = distance.ToString();
+                textBox2.Text = "Route Distance:  " + distance.ToString();
             }
         }
 
@@ -87,12 +87,7 @@ namespace ConsoleApplication1
         {
 
             panel1.Refresh();
-            textBox1.Refresh();
-            textBox1.Text = "";
-            foreach (Edge item in edgelist)
-            {
-                textBox1.Text += item.FromNode.id;
-            }
+     
             mainthread.Resume();
         }
 
