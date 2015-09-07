@@ -10,7 +10,7 @@ namespace ConsoleApplication1
     { 
         private float[,] distanceList;
         public int[] path { get; }
-        public float netdistance;
+        public float netdistance { get; };
 
         public route(float[,] distances, int[] iarray)
         {
@@ -49,7 +49,7 @@ namespace ConsoleApplication1
 
 
         }
-        public float getNetDist() { return netdistance; }
+        
         public void printPath() { Console.Write("Path: "); foreach (int i in path) { Console.Write(i+ " -> "); }Console.Write(path[0]); }
     
     }

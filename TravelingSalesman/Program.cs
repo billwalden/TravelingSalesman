@@ -286,7 +286,7 @@ namespace ConsoleApplication1
                 nodeIDlist.CopyTo(currentpath, 1);
                 currentroute = new route(distancelist, currentpath);
                 
-                if(currentroute.getNetDist() < fastestroute.getNetDist())
+                if(currentroute.netdistance < fastestroute.netdistance)
                 {
                     currentpath.CopyTo(fastestpath, 0);
                     fastestroute = new route(distancelist, fastestpath);
@@ -294,7 +294,7 @@ namespace ConsoleApplication1
                
             }
             fastestroute.printPath();
-            Console.WriteLine("\nFast Distance:  " + fastestroute.getNetDist());
+            Console.WriteLine("\nFast Distance:  " + fastestroute.netdistance);
             Console.WriteLine("Traveling from and back to Node# " + startnode.getid());
         }
 
