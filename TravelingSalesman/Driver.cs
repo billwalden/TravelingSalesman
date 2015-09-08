@@ -20,7 +20,6 @@ namespace ConsoleApplication1
         static void Main(string[] args)
         {
 
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -31,7 +30,7 @@ namespace ConsoleApplication1
                          new int[3]{1, 2, 3}, new int[1]{2}, new int[2]{3, 4}, new int[3]{4, 5, 6}, new int[2]{6, 7},
                          new int[1]{7}, new int[2]{8, 9}, new int[3]{8, 9, 10}, new int[1]{10}, new int[1]{10}
                       };*/
-            List<node> nodes = ParseTextFornodes("C:\\Users\\walde_000\\Desktop\\Art. Itelli\\project 3\\Random40.tsp");
+            List<node> nodes = ParseTextFornodes("C:\\Users\\walde_000\\Desktop\\Art. Itelli\\project 3\\Random30.tsp");
             List<Edge> edges = program.createEdgeList(nodes);
 
             program.bruteFindFastest(nodes, nodes[0]);
@@ -488,15 +487,14 @@ namespace ConsoleApplication1
                         float D = CrossProduct / edge.distance;
                         float Dotproduct = edge.xdif * NodetoEdgeStart.xdif + edge.ydif * NodetoEdgeStart.ydif;
                         float t = Dotproduct / (edge.distance * edge.distance);
-                        float D1 = NodetoEdgeStart.distance + NodetoEdgeEnd.distance;
                         edge2 = route.Find(i => (i.ToNode == edge.FromNode));
                         NodetoEdge2Start = edgelist.Find(i => ((i.ToNode == item) && (i.FromNode == edge2.FromNode)));
                         NodetoEdge2End = edgelist.Find(i => ((i.ToNode == edge2.ToNode) && (i.FromNode == item)));
-                        float D2 = NodetoEdge2Start.distance + NodetoEdge2End.distance;
+                        float D2 = NodetoEdge2Start.distance + NodetoEdge2End.distance + edge.distance;
+                        float D1 = NodetoEdgeStart.distance + NodetoEdgeEnd.distance + edge2.distance;
 
                         if ((t > 0) && (t < 1))
                         {
-
                             if (!route.Contains(item.ClosestEdge))
                             {
                                 item.ClosestEdgeDist = D;
@@ -508,18 +506,24 @@ namespace ConsoleApplication1
                                 item.ClosestEdge = edge;
                             }
                         }
-                       
-           
-              
-                        else if (NodetoEdgeStart.distance < item.ClosestEdgeDist)
+                       else if (!route.Contains(item.ClosestEdge))
+                        {
+                            item.ClosestEdgeDist = NodetoEdgeStart.distance;
+                            item.ClosestEdge = edge;
+                        }
+                     
+
+                        if (NodetoEdgeStart.distance <= item.ClosestEdgeDist)
                         {
                             item.ClosestEdgeDist = NodetoEdgeStart.distance;
                             if (D1 < D2)
                             {
                                 item.ClosestEdge = edge;
                             }
+                            else if(D1 > D2)
+                                item.ClosestEdge = edge2;
                             else
-                                item.ClosestEdge = edge2;  
+                                item.ClosestEdge = edge;
                         }
                         else { }
                         
@@ -536,6 +540,8 @@ namespace ConsoleApplication1
               
                 markednodes.Add(closestnode);
                 nodelist.Remove(closestnode);
+
+                Console.WriteLine("\n" + route.IndexOf(closestnode.ClosestEdge));
                 
                 route.Insert(route.IndexOf(closestnode.ClosestEdge), new Edge(closestnode, closestnode.ClosestEdge.ToNode));
                 route.Insert(route.IndexOf(closestnode.ClosestEdge) -1, new Edge(closestnode.ClosestEdge.FromNode, closestnode));
