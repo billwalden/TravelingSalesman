@@ -15,7 +15,7 @@ namespace ConsoleApplication1
 {
     class Driver
     {
-
+       
         [STAThread]
         static void Main(string[] args)
         {
@@ -30,13 +30,14 @@ namespace ConsoleApplication1
                          new int[3]{1, 2, 3}, new int[1]{2}, new int[2]{3, 4}, new int[3]{4, 5, 6}, new int[2]{6, 7},
                          new int[1]{7}, new int[2]{8, 9}, new int[3]{8, 9, 10}, new int[1]{10}, new int[1]{10}
                       };*/
-            List<node> nodes = ParseTextFornodes("C:\\Users\\walde_000\\Desktop\\Art. Itelli\\project 3\\Random30.tsp");
-            List<Edge> edges = program.createEdgeList(nodes);
 
-            program.bruteFindFastest(nodes, nodes[0]);
-            
 
-           program.greedy(edges, nodes, nodes[0]);
+            //List<node> nodes = createRandomNodeList(12);
+           // program.bruteFindFastest(nodes, nodes[0]);
+
+
+            Form1 form = new Form1();
+            Application.Run(form);
             
             /* for(int i = 0; i < nodes.Count() -2; i++)
              {
@@ -70,6 +71,21 @@ namespace ConsoleApplication1
             double D = Math.Sqrt(Dsquared);
             return Convert.ToSingle(D);
 
+        }
+
+        public static List<node> createRandomNodeList(int numNodes)
+        {
+            List<node> nodelist = new List<node>();
+            Random rand = new Random();
+
+            for(int i = 0; i < numNodes; i++)
+            {
+                float randomx = (float)(rand.NextDouble() * 100 + rand.NextDouble());
+                float randomy = (float)(rand.NextDouble() * 100 + rand.NextDouble());
+                nodelist.Add(new node(i, randomx, randomy));
+            
+            }
+            return nodelist;
         }
 
         //Parses text file for lines that begins with a digit, assumes the line contains coordinates and creates a node from coordinates. Then, returns an array of all nodes.
@@ -125,7 +141,7 @@ namespace ConsoleApplication1
             
         }
 
-        public List <Edge> createEdgeList(List <node> nodelist)
+        public static List <Edge> createEdgeList(List <node> nodelist)
         {
             List<Edge> edgelist = new List<Edge>();
             for(int i = 0; i < nodelist.Count(); i++)
@@ -293,7 +309,7 @@ namespace ConsoleApplication1
                
             }
             fastestroute.printPath();
-            Console.WriteLine("\nFast Distance:  " + fastestroute.netdistance);
+            Console.WriteLine("\nDistance:  " + fastestroute.netdistance);
             Console.WriteLine("Traveling from and back to Node# " + startnode.id);
         }
 
@@ -335,7 +351,7 @@ namespace ConsoleApplication1
                
             }
             int prevNodeId = nodelist[nodelist.Count() - 1].PreviousNodeid;
-            Console.Write("Path: " + prevNodeId);
+            Console.Write("Fastest Path: " + prevNodeId);
             while(prevNodeId != 0)
             {
                 Console.Write(" <- " + nodelist[prevNodeId].PreviousNodeid);
@@ -395,15 +411,18 @@ namespace ConsoleApplication1
         }
     
 
-        public void greedy(List<Edge> edgelist,List <node> nodelist, node startnode)
+        public static void farthestInsertion(List<Edge> edgelist,List <node> nodelist, node startnode, Form1 f)
         {
-            Thread mainthread = Thread.CurrentThread;
+            Thread thisThread = Thread.CurrentThread;
             int count = nodelist.Count();
             Edge greatestEdge = edgelist[0];
-            List<node> markednodes = new List<node>();
-            List<Edge> route = new List<Edge>();
+            List <node> markednodes = new List<node>();
+            List<Edge> Route = new List<Edge>();
+            f.route = Route;
             List<node> nodelistcopy = new List<node>(nodelist);
-
+            f.secondThread = thisThread;
+            f.marked = markednodes;
+            
             markednodes.Add(startnode);
             nodelist.Remove(startnode);
             
@@ -424,19 +443,13 @@ namespace ConsoleApplication1
                 }
             }
            
-
-            route.Add(greatestEdge);
-            route.Add(new Edge(greatestEdge.ToNode, greatestEdge.FromNode));
+            Route.Add(greatestEdge);
+            Route.Add(new Edge(greatestEdge.ToNode, greatestEdge.FromNode));
 
             markednodes.Add(greatestEdge.ToNode);
             nodelist.Remove(greatestEdge.ToNode);
 
-            Form1 plot = new Form1(nodelistcopy, route, markednodes, mainthread);
-            new Thread(delegate () {
-                Application.Run(plot);
-            }).Start();
-            mainthread.Suspend();
-
+            f.Invoke(f.addPanelDelegate);
 
             Edge NodetoEdgeStart;
             Edge NodetoEdgeEnd;
@@ -462,16 +475,17 @@ namespace ConsoleApplication1
             markednodes.Add(closestnode);
             nodelist.Remove(closestnode);
             
-            route.Remove(route[0]);
+            Route.Remove(Route[0]);
 
        
-            route.Insert(0, new Edge(closestnode, greatestEdge.ToNode));
-            route.Insert(0, new Edge(greatestEdge.FromNode, closestnode));
+            Route.Insert(0, new Edge(closestnode, greatestEdge.ToNode));
+            Route.Insert(0, new Edge(greatestEdge.FromNode, closestnode));
 
-            mainthread.Suspend();
+            
+            f.Invoke(f.refresherDelegate);
 
 
-            while (route.Count() < count)
+            while (Route.Count() < count)
             {
                 closestnode = nodelist[0];
                 List <node> nodelistcopy2 = new List<node>(nodelist);
@@ -479,7 +493,7 @@ namespace ConsoleApplication1
               
                 foreach (node item in nodelistcopy2)
                 {
-                    foreach (Edge edge in route)
+                    foreach (Edge edge in Route)
                     {
                         NodetoEdgeStart = edgelist.Find(i => ((i.ToNode == item) && (i.FromNode == edge.FromNode)));
                         NodetoEdgeEnd = edgelist.Find(i => ((i.ToNode == edge.ToNode) && (i.FromNode == item)));
@@ -487,7 +501,7 @@ namespace ConsoleApplication1
                         float D = CrossProduct / edge.distance;
                         float Dotproduct = edge.xdif * NodetoEdgeStart.xdif + edge.ydif * NodetoEdgeStart.ydif;
                         float t = Dotproduct / (edge.distance * edge.distance);
-                        edge2 = route.Find(i => (i.ToNode == edge.FromNode));
+                        edge2 = Route.Find(i => (i.ToNode == edge.FromNode));
                         NodetoEdge2Start = edgelist.Find(i => ((i.ToNode == item) && (i.FromNode == edge2.FromNode)));
                         NodetoEdge2End = edgelist.Find(i => ((i.ToNode == edge2.ToNode) && (i.FromNode == item)));
                         float D2 = NodetoEdge2Start.distance + NodetoEdge2End.distance + edge.distance;
@@ -495,7 +509,7 @@ namespace ConsoleApplication1
 
                         if ((t > 0) && (t < 1))
                         {
-                            if (!route.Contains(item.ClosestEdge))
+                            if (!Route.Contains(item.ClosestEdge))
                             {
                                 item.ClosestEdgeDist = D;
                                 item.ClosestEdge = edge;
@@ -506,7 +520,7 @@ namespace ConsoleApplication1
                                 item.ClosestEdge = edge;
                             }
                         }
-                       else if (!route.Contains(item.ClosestEdge))
+                       else if (!Route.Contains(item.ClosestEdge))
                         {
                             item.ClosestEdgeDist = NodetoEdgeStart.distance;
                             item.ClosestEdge = edge;
@@ -540,17 +554,15 @@ namespace ConsoleApplication1
               
                 markednodes.Add(closestnode);
                 nodelist.Remove(closestnode);
-
-                Console.WriteLine("\n" + route.IndexOf(closestnode.ClosestEdge));
-                
-                route.Insert(route.IndexOf(closestnode.ClosestEdge), new Edge(closestnode, closestnode.ClosestEdge.ToNode));
-                route.Insert(route.IndexOf(closestnode.ClosestEdge) -1, new Edge(closestnode.ClosestEdge.FromNode, closestnode));
+   
+                Route.Insert(Route.IndexOf(closestnode.ClosestEdge), new Edge(closestnode, closestnode.ClosestEdge.ToNode));
+                Route.Insert(Route.IndexOf(closestnode.ClosestEdge) -1, new Edge(closestnode.ClosestEdge.FromNode, closestnode));
                 markednodes.Add(closestnode);
                 nodelist.Remove(closestnode);
-                route.Remove(closestnode.ClosestEdge);
-                mainthread.Suspend();
+                Route.Remove(closestnode.ClosestEdge);
 
-              
+                f.Invoke(f.refresherDelegate);
+
             }
         
 
