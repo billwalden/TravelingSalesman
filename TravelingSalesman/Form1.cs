@@ -38,6 +38,7 @@ namespace ConsoleApplication1
             formThread = Thread.CurrentThread;
             addPanelDelegate = new addpanel2(addPanel2);
             refresherDelegate = new Refresher(refresher);
+            this.AcceptButton = button2;
 
         }
 
@@ -94,7 +95,9 @@ namespace ConsoleApplication1
             this.textBox1.Name = "textBox2";
             this.textBox1.Size = new System.Drawing.Size(238, 29);
             this.textBox1.TabIndex = 2;
-            //this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+
+            button1.Hide();
+
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -119,7 +122,9 @@ namespace ConsoleApplication1
                 Driver.farthestInsertion(edgelist, nodelist, startnode, this);
             }).Start();
             startButton.Enabled = false;
-            panel1.Dispose();
+            panel1.Hide();
+            panel2.Show();
+            
         }
         private void node_added(object sender, EventArgs e)
         {
@@ -150,8 +155,11 @@ namespace ConsoleApplication1
             startnode = nodelist[0];
             this.count = nodelist.Count();       
             this.Controls.Add(panel1);
+            panel1.Show();
             button2.Hide();
             this.Controls.Add(startButton);
+            this.AcceptButton = startButton;
+
         }
 
         private void maskedTextBox1_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
@@ -204,10 +212,29 @@ namespace ConsoleApplication1
                 }
         
                 this.Controls.Add(textBox1);
+                textBox1.Show();
                 textBox1.Text = "Route Distance:  " + distance.ToString();
                 this.textBox1.ReadOnly = true;
+                button1.Show();
+                this.AcceptButton = button1;
+              
             }
             secondThread.Resume();
         }
+
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            textBox1.Hide();
+            panel2.Hide();
+            button2.Show();
+            startButton.Enabled = true;
+            maskedTextBox1.Mask = "000";
+            maskedTextBox1.Text = "20";
+            maskedTextBox1.ReadOnly = false;
+            button1.Hide();
+            this.AcceptButton = button2;         
+        }
     }
+
 }
