@@ -1,34 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ConsoleApplication1
 {
     public partial class Form1 : Form
     {
-        List<node> nodelist;
-        List<Edge> edgelist;
+        private List<node> nodelist;
+        private List<Edge> edgelist;
         public List<Edge> route { get; set; }
         public List<node> marked { get; set; }
-        node startnode; 
+        private node startnode;
         public Thread formThread { get; set; }
         public Thread secondThread { get; set; }
-        int count;
+        private int count;
+
         public delegate void addpanel2();
+
         public addpanel2 addPanelDelegate;
+
         public delegate void Refresher();
+
         public Refresher refresherDelegate;
-        Panel panel1;
-        Panel panel2;
-        TextBox textBox1;
-        Button startButton;
+        private Panel panel1;
+        private Panel panel2;
+        private TextBox textBox1;
+        private Button startButton;
 
         public Form1()
         {
@@ -39,23 +39,21 @@ namespace ConsoleApplication1
             addPanelDelegate = new addpanel2(addPanel2);
             refresherDelegate = new Refresher(refresher);
             this.AcceptButton = button2;
-
         }
 
-        Pen blackpen = new Pen(Color.Black);
-        Brush blackbrush = new SolidBrush(Color.Black);
-        Brush redbrush = new SolidBrush(Color.Red);
-        Brush greenbrush = new SolidBrush(Color.Green);
-        Brush purplebrush = new SolidBrush(Color.Purple);
+        private Pen blackpen = new Pen(Color.Black);
+        private Brush blackbrush = new SolidBrush(Color.Black);
+        private Brush redbrush = new SolidBrush(Color.Red);
+        private Brush greenbrush = new SolidBrush(Color.Green);
+        private Brush purplebrush = new SolidBrush(Color.Purple);
+
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
             ToolTip toolTip1 = new ToolTip();
-
 
             toolTip1.AutoPopDelay = 4000;
             toolTip1.InitialDelay = 250;
@@ -97,22 +95,18 @@ namespace ConsoleApplication1
             this.textBox1.TabIndex = 2;
 
             button1.Hide();
-
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
 
-             foreach (node item in nodelist)
-             {
-                 g.FillEllipse(blackbrush, item.x * 5, item.y * 5, 8, 8);
-
-             }
-              g.FillEllipse(greenbrush, startnode.x * 5, startnode.y * 5, 8, 8);
-            
+            foreach (node item in nodelist)
+            {
+                g.FillEllipse(blackbrush, item.x * 5, item.y * 5, 8, 8);
+            }
+            g.FillEllipse(greenbrush, startnode.x * 5, startnode.y * 5, 8, 8);
         }
-        
 
         private void startButton_Click_1(object sender, EventArgs e)
         {
@@ -124,26 +118,22 @@ namespace ConsoleApplication1
             startButton.Enabled = false;
             panel1.Hide();
             panel2.Show();
-            
         }
+
         private void node_added(object sender, EventArgs e)
         {
-
         }
 
         private void textBox1_Texthanged(object sender, EventArgs e)
         {
-           
         }
 
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
-
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-           
         }
 
         private void button2_Click_1(object sender, EventArgs e)
@@ -153,19 +143,18 @@ namespace ConsoleApplication1
             nodelist = Driver.createRandomNodeList(numNodes);
             edgelist = Driver.createEdgeList(nodelist);
             startnode = nodelist[0];
-            this.count = nodelist.Count();       
+            this.count = nodelist.Count();
             this.Controls.Add(panel1);
             panel1.Show();
             button2.Hide();
             this.Controls.Add(startButton);
             this.AcceptButton = startButton;
-
         }
 
         private void maskedTextBox1_MaskInputRejected(object sender, MaskInputRejectedEventArgs e)
         {
-            
         }
+
         public void addPanel2()
         {
             secondThread.Suspend();
@@ -186,7 +175,6 @@ namespace ConsoleApplication1
             {
                 if (!marked.Contains(item))
                     g.FillEllipse(blackbrush, item.x * 5, item.y * 5, 8, 8);
-
             }
             foreach (Edge edge in route)
             {
@@ -200,28 +188,23 @@ namespace ConsoleApplication1
             g.FillEllipse(greenbrush, startnode.x * 5, startnode.y * 5, 8, 8);
             g.FillEllipse(purplebrush, marked.Last().x * 5, marked.Last().y * 5, 8, 8);
 
-
             if (route.Count() == this.count)
             {
-
                 float distance = 0;
                 foreach (Edge item in route)
                 {
                     distance += item.distance;
-
                 }
-        
+
                 this.Controls.Add(textBox1);
                 textBox1.Show();
                 textBox1.Text = "Route Distance:  " + distance.ToString();
                 this.textBox1.ReadOnly = true;
                 button1.Show();
                 this.AcceptButton = button1;
-              
             }
             secondThread.Resume();
         }
-
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -233,8 +216,7 @@ namespace ConsoleApplication1
             maskedTextBox1.Text = "20";
             maskedTextBox1.ReadOnly = false;
             button1.Hide();
-            this.AcceptButton = button2;         
+            this.AcceptButton = button2;
         }
     }
-
 }

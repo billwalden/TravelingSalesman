@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ConsoleApplication1
 {
-    class routes
+    internal class routes
     {
         public List<route> routeList { get; }
 
@@ -16,7 +14,6 @@ namespace ConsoleApplication1
             for (int i = 0; i < paths.Count; i++)
 
             {
-             
                 route route = new route(distanceList, paths[i]);
                 this.routeList.Add(route);
             }
@@ -25,18 +22,18 @@ namespace ConsoleApplication1
 
         public void printDistances()
         {
-            foreach(route item in routeList)
+            foreach (route item in routeList)
             {
                 float d = item.netdistance;
                 Console.Write("\n" + d);
             }
         }
+
         public void printFastestDistance(int startnodeID)
         {
             route fastest = routeList.Find(i => (i.path[0] == startnodeID));
             Console.WriteLine("\nFastest Distance:  " + fastest.netdistance);
             Console.WriteLine("Starting from and traveling back to node# " + startnodeID);
         }
-        
     }
 }
